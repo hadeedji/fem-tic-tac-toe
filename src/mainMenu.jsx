@@ -59,14 +59,14 @@ export default () => {
         </div>
       </div>
       <div className="flex w-full flex-col items-center justify-between space-y-[20px]">
-        <div className="flex w-full items-center justify-center rounded-[15px] bg-yellow-700 p-[17px] drop-shadow-[0_8px_0_#CC8B13] hover:bg-yellow-400">
+        <button className="flex w-full items-center justify-center rounded-[15px] bg-yellow-700 p-[17px] drop-shadow-[0_8px_0_#CC8B13] hover:bg-yellow-400">
           <p className="text-h-s text-navy-700 uppercase">New game (vs cpu)</p>
-        </div>
-        <div className="flex w-full items-center justify-center rounded-[15px] bg-blue-700 p-[17px] drop-shadow-[0_8px_0_#118C87] hover:bg-blue-400">
+        </button>
+        <button className="flex w-full items-center justify-center rounded-[15px] bg-blue-700 p-[17px] drop-shadow-[0_8px_0_#118C87] hover:bg-blue-400">
           <p className="text-h-s text-navy-700 uppercase">
             New game (vs player)
           </p>
-        </div>
+        </button>
       </div>
     </div>
   );
