@@ -1,12 +1,12 @@
-import { useState } from "react";
 import * as RadioGroup from "@radix-ui/react-radio-group";
 
 import logo from "../assets/logo.svg";
 import Cross from "../assets/icon-x.svg?react";
 import Oval from "../assets/icon-o.svg?react";
+import { useStore, setPlayerOneSymbol } from "./store.jsx";
 
 export default () => {
-  const [playerSymbol, setPlayerSymbol] = useState("cross");
+  const playerOneSymbol = useStore((state) => state.playerOneSymbol);
 
   return (
     <div className="m-6 flex w-full max-w-lg flex-col items-center space-y-10">
@@ -17,9 +17,8 @@ export default () => {
         </h2>
         <RadioGroup.Root
           className="mb-4 flex h-20 w-full items-center justify-between rounded-xl bg-navy-700 p-2"
-          defaultValue="cross"
-          value={playerSymbol}
-          onValueChange={setPlayerSymbol}
+          value={playerOneSymbol}
+          onValueChange={setPlayerOneSymbol}
           loop={false}
         >
           {[
