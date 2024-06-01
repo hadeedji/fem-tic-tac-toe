@@ -9,7 +9,7 @@ export default () => {
   return (
     <div className="m-5 flex w-full max-w-lg flex-col items-center space-y-10">
       <img src={logo} alt="logo" />
-      <div className="flex w-full flex-col items-center justify-center rounded-2xl bg-navy-400 p-6 drop-shadow-[0_8px_0_#10212A]">
+      <div className="inner-shadow-2-navy-900 flex w-full flex-col items-center justify-center rounded-2xl bg-navy-400 p-6">
         <h2 className="mb-6 text-h-xs uppercase text-silver-700">
           Pick player 1's mark
         </h2>
@@ -60,10 +60,10 @@ export default () => {
         </p>
       </div>
       <div className="w-full space-y-5">
-        <button className="flex w-full items-center justify-center rounded-2xl bg-yellow-700 p-4 drop-shadow-[0_8px_0_#CC8B13] hover:bg-yellow-400">
+        <button className="inner-shadow-2-yellow-900 flex w-full items-center justify-center rounded-2xl bg-yellow-700 p-4 hover:bg-yellow-400">
           <p className="text-h-s uppercase text-navy-700">New game (vs cpu)</p>
         </button>
-        <button className="flex w-full items-center justify-center rounded-2xl bg-blue-700 p-4 drop-shadow-[0_8px_0_#118C87] hover:bg-blue-400">
+        <button className="inner-shadow-2-blue-900 flex w-full items-center justify-center rounded-2xl bg-blue-700 p-4 hover:bg-blue-400">
           <p className="text-h-s uppercase text-navy-700">
             New game (vs player)
           </p>
