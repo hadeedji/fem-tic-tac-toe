@@ -2,7 +2,7 @@ import MainMenu from "./mainMenu";
 
 export default () => {
   return (
-    <main className="bg-navy-700 flex h-screen items-center justify-center">
+    <main className="flex min-h-screen items-center justify-center bg-navy-700">
       <MainMenu />
     </main>
   );
