@@ -21,7 +21,7 @@ const innerShadowPlugin = plugin(function ({ addUtilities, theme, e }) {
 
       return {
         [`.${e(`inner-shadow-${spacingKey}-${colorKey}`)}`]: {
-          filter: `drop-shadow(0 ${spacingValue} ${colorValue})`,
+          "box-shadow": `inset 0 -${spacingValue} ${colorValue}`,
         },
       };
     });
