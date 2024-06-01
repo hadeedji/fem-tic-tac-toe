@@ -46,6 +46,7 @@ export default {
       "yellow-900": "#CC8B13",
       "yellow-700": "#F2B137",
       "yellow-400": "#FFC860",
+      black: "#000",
     },
     fontFamily: {
       sans: ["Outfit", "sans-serif"],
@@ -80,7 +81,7 @@ export default {
         },
       ],
       "h-l": [
-        "24px",
+        "40px",
         {
           letterSpacing: "2.5px",
           fontWeight: "700",

@@ -3,7 +3,7 @@ import * as RadioGroup from "@radix-ui/react-radio-group";
 import logo from "../assets/logo.svg";
 import Cross from "../assets/icon-x.svg?react";
 import Oval from "../assets/icon-o.svg?react";
-import { useStore, setPlayerOneSymbol } from "./store.jsx";
+import { useStore, setPlayerOneSymbol } from "./store";
 
 export default () => {
   const playerOneSymbol = useStore((state) => state.playerOneSymbol);
@@ -11,7 +11,7 @@ export default () => {
   return (
     <div className="m-6 flex w-full max-w-lg flex-col items-center space-y-10">
       <img src={logo} alt="logo" />
-      <div className="inner-shadow-2-navy-900 flex w-full flex-col items-center justify-center rounded-2xl bg-navy-400 p-6">
+      <div className="flex w-full flex-col items-center justify-center rounded-2xl bg-navy-400 p-6 inner-shadow-2-navy-900">
         <h2 className="mb-6 text-h-xs uppercase text-silver-700">
           Pick player 1's mark
         </h2>
@@ -43,10 +43,10 @@ export default () => {
         </p>
       </div>
       <div className="w-full space-y-5">
-        <button className="inner-shadow-2-yellow-900 flex w-full items-center justify-center rounded-2xl bg-yellow-700 p-4 hover:bg-yellow-400">
+        <button className="flex w-full items-center justify-center rounded-2xl bg-yellow-700 p-4 inner-shadow-2-yellow-900 hover:bg-yellow-400">
           <p className="text-h-s uppercase text-navy-700">New game (vs cpu)</p>
         </button>
-        <button className="inner-shadow-2-blue-900 flex w-full items-center justify-center rounded-2xl bg-blue-700 p-4 hover:bg-blue-400">
+        <button className="flex w-full items-center justify-center rounded-2xl bg-blue-700 p-4 inner-shadow-2-blue-900 hover:bg-blue-400">
           <p className="text-h-s uppercase text-navy-700">
             New game (vs player)
           </p>
