@@ -22,26 +22,22 @@ export default () => {
           onValueChange={setPlayerSymbol}
           loop={false}
         >
-          <RadioGroup.Item
-            className="h-full w-1/2 rounded-xl hover:bg-silver-700/5 data-[state='checked']:bg-silver-700"
-            value="cross"
-          >
-            <Cross
-              width="32"
-              height="32"
-              className={`m-auto ${playerSymbol == "cross" ? "text-navy-700" : "text-silver-700"}`}
-            />
-          </RadioGroup.Item>
-          <RadioGroup.Item
-            className="h-full w-1/2 rounded-xl hover:bg-silver-700/5 data-[state='checked']:bg-silver-700"
-            value="oval"
-          >
-            <Oval
-              width="32"
-              height="32"
-              className={`m-auto ${playerSymbol == "oval" ? "text-navy-700" : "text-silver-700"}`}
-            />
-          </RadioGroup.Item>
+          {[
+            ["cross", Cross],
+            ["oval", Oval],
+          ].map(([value, Symbol]) => (
+            <RadioGroup.Item
+              className="group h-full w-1/2 rounded-xl hover:bg-silver-700/5 data-[state='checked']:bg-silver-700"
+              key={value}
+              value={value}
+            >
+              <Symbol
+                width="32"
+                height="32"
+                className="m-auto text-silver-700 group-data-[state='checked']:text-navy-700"
+              />
+            </RadioGroup.Item>
+          ))}
         </RadioGroup.Root>
         <p className="text-base uppercase text-silver-700">
           Remember : X goes first
