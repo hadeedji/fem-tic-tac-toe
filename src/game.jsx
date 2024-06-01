@@ -44,7 +44,10 @@ export default () => {
           </div>
         </div>
         <div className="flex-1">
-          <button className="ml-auto flex size-14 items-center justify-center rounded-xl bg-silver-700 inner-shadow-1-silver-900 hover:bg-silver-400">
+          <button
+            onClick={() => updateGrid(() => Array(9).fill(""))}
+            className="ml-auto flex size-14 items-center justify-center rounded-xl bg-silver-700 inner-shadow-1-silver-900 hover:bg-silver-400"
+          >
             <img src={restart} alt="restart" />
           </button>
         </div>
