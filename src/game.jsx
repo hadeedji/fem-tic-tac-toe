@@ -1,33 +1,34 @@
+import { useImmer } from "use-immer";
+
+import Cross from "../assets/icon-x.svg?react";
+import CrossOutline from "../assets/icon-x-outline.svg?react";
+import Oval from "../assets/icon-o.svg?react";
+import OvalOutline from "../assets/icon-o-outline.svg?react";
 import logo from "../assets/logo.svg";
 import restart from "../assets/icon-restart.svg";
 
-import Cross from "../assets/icon-x.svg?react";
-import Oval from "../assets/icon-o.svg?react";
-import CrossOutline from "../assets/icon-x-outline.svg?react";
-import OvalOutline from "../assets/icon-o-outline.svg?react";
-
 export default () => {
-  const grid = ["", "X", "O", "X", "O", "X", "", "O", "X"];
+  const [grid, updateGrid] = useImmer(Array(9).fill(""));
+  const turn = grid.filter((s) => s == "").length % 2 != 0 ? "X" : "O";
+
+  const TurnOutline = turn == "X" ? CrossOutline : OvalOutline;
+  const TurnIndicator = turn == "X" ? Cross : Oval;
 
   const renderSymbol = (symbol) => {
-    let Component;
-    let colorClass;
+    if (symbol == "") {
+      let colorClass = turn == "X" ? "text-blue-700" : "text-yellow-700";
 
-    if (symbol == "X") {
-      Component = Cross;
-      colorClass = "text-blue-700";
-    } else if (symbol == "O") {
-      Component = Oval;
-      colorClass = "text-yellow-700";
-    } else {
       return (
-        <CrossOutline
-          className={`hidden size-16 text-blue-700 group-hover:block`}
+        <TurnOutline
+          className={`hidden size-16 group-hover:block ${colorClass}`}
         />
       );
     }
 
-    return <Component className={`size-16 ${colorClass}`} />;
+    let Symbol = symbol == "X" ? Cross : Oval;
+    let colorClass = symbol == "X" ? "text-blue-700" : "text-yellow-700";
+
+    return <Symbol className={`size-16 ${colorClass}`} />;
   };
 
   return (
@@ -38,7 +39,7 @@ export default () => {
         </div>
         <div className="h-14 w-36 rounded-xl bg-navy-400 px-8 py-4 inner-shadow-1-navy-900">
           <div className="flex items-center justify-between text-silver-700">
-            <Cross className="size-5" />
+            <TurnIndicator className="size-5" />
             <p className="text-h-xs uppercase">Turn</p>
           </div>
         </div>
@@ -50,10 +51,16 @@ export default () => {
       </header>
 
       <main className="grid grid-cols-3 grid-rows-3 gap-5">
-        {grid.map((symbol) => (
+        {grid.map((symbol, index) => (
           <button
+            key={index}
             disabled={symbol != ""}
             className="group flex size-36 items-center justify-center rounded-2xl bg-navy-400 inner-shadow-2-navy-900"
+            onClick={() => {
+              updateGrid((grid) => {
+                grid[index] = turn;
+              });
+            }}
           >
             {renderSymbol(symbol)}
           </button>
