@@ -13,7 +13,7 @@ export default {
       "yellow-400": "#FFC860",
     },
     fontFamily: {
-      sans: ["Outfit"],
+      sans: ["Outfit", "sans-serif"],
     },
     fontSize: {
       base: [
