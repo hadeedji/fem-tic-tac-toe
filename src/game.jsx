@@ -8,15 +8,54 @@ import OvalOutline from "../assets/icon-o-outline.svg?react";
 import logo from "../assets/logo.svg";
 import restart from "../assets/icon-restart.svg";
 
+import { restartGame } from "./store";
 import Modal from "./modal";
 
-export default () => {
+const getWinner = (grid) => {
+  const combos = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+
+  const wins = (combo) => {
+    const symbols = combo.map((i) => grid[i]);
+
+    return symbols.every((symbol) => symbol == symbols[0] && symbol != "");
+  };
+
+  const winningCombo = combos.find(wins);
+
+  if (winningCombo) {
+    return grid[winningCombo[0]];
+  }
+
+  return "";
+};
+
+export default ({ players: _players }) => {
+  const [score, updateScore] = useImmer({ X: 0, O: 0, ties: 0 });
+
   const [grid, updateGrid] = useImmer(Array(9).fill(""));
   const [modal, setModal] = useState(false);
 
   const turn = grid.filter((s) => s == "").length % 2 != 0 ? "X" : "O";
   const TurnOutline = turn == "X" ? CrossOutline : OvalOutline;
   const TurnIndicator = turn == "X" ? Cross : Oval;
+
+  const winner = getWinner(grid);
+  if (winner) {
+    updateScore((score) => {
+      score[winner]++;
+    });
+
+    updateGrid(() => Array(9).fill(""));
+  }
 
   const renderSymbol = (symbol) => {
     if (symbol == "") {
@@ -77,16 +116,16 @@ export default () => {
 
         <footer className="flex items-center justify-between text-navy-700">
           <div className="flex h-20 w-36 flex-col items-center justify-center rounded-2xl bg-blue-700">
-            <p className="text-base uppercase">X (you)</p>
-            <p className="text-h-m uppercase">14</p>
+            <p className="text-base uppercase">X ({_players.X})</p>
+            <p className="text-h-m uppercase">{score.X}</p>
           </div>
           <div className="flex h-20 w-36 flex-col items-center justify-center rounded-2xl bg-silver-700">
             <p className="text-base uppercase">Ties</p>
-            <p className="text-h-m uppercase">32</p>
+            <p className="text-h-m uppercase">{score.ties}</p>
           </div>
           <div className="flex h-20 w-36 flex-col items-center justify-center rounded-2xl bg-yellow-700">
-            <p className="text-base uppercase">O (cpu)</p>
-            <p className="text-h-m uppercase">11</p>
+            <p className="text-base uppercase">O ({_players.O})</p>
+            <p className="text-h-m uppercase">{score.O}</p>
           </div>
         </footer>
       </div>
@@ -106,9 +145,7 @@ export default () => {
             <p className="text-h-xs uppercase">No, cancel</p>
           </button>
           <button
-            onClick={() => {
-              updateGrid(() => Array(9).fill(""));
-            }}
+            onClick={restartGame}
             className="rounded-xl bg-yellow-700 px-5 py-4 inner-shadow-1-yellow-900 hover:bg-yellow-400"
           >
             <p className="text-h-xs uppercase">Yes, restart</p>

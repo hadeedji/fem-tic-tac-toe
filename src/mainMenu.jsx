@@ -1,12 +1,24 @@
 import * as RadioGroup from "@radix-ui/react-radio-group";
+import { useState } from "react";
 
 import logo from "../assets/logo.svg";
 import Cross from "../assets/icon-x.svg?react";
 import Oval from "../assets/icon-o.svg?react";
-import { useStore, setPlayerOneSymbol } from "./store";
+
+import { setIsGameRunning, updatePlayers } from "./store";
 
 export default () => {
-  const playerOneSymbol = useStore((state) => state.playerOneSymbol);
+  const [playerOneSymbol, setPlayerOneSymbol] = useState("X");
+  const playerTwoSymbol = playerOneSymbol == "X" ? "O" : "X";
+
+  const startGame = (playerTwo) => {
+    updatePlayers({
+      [playerOneSymbol]: "P1",
+      [playerTwoSymbol]: playerTwo,
+    });
+
+    setIsGameRunning(true);
+  };
 
   return (
     <div className="m-6 flex w-full max-w-lg flex-col items-center space-y-10">
@@ -22,8 +34,8 @@ export default () => {
           loop={false}
         >
           {[
-            ["cross", Cross],
-            ["oval", Oval],
+            ["X", Cross],
+            ["O", Oval],
           ].map(([value, Symbol]) => (
             <RadioGroup.Item
               className="group h-full w-1/2 rounded-xl hover:bg-silver-700/5 data-[state='checked']:bg-silver-700"
@@ -43,10 +55,16 @@ export default () => {
         </p>
       </div>
       <div className="w-full space-y-5">
-        <button className="flex w-full items-center justify-center rounded-2xl bg-yellow-700 p-4 inner-shadow-2-yellow-900 hover:bg-yellow-400">
+        <button
+          onClick={() => startGame("CPU")}
+          className="flex w-full items-center justify-center rounded-2xl bg-yellow-700 p-4 inner-shadow-2-yellow-900 hover:bg-yellow-400"
+        >
           <p className="text-h-s uppercase text-navy-700">New game (vs cpu)</p>
         </button>
-        <button className="flex w-full items-center justify-center rounded-2xl bg-blue-700 p-4 inner-shadow-2-blue-900 hover:bg-blue-400">
+        <button
+          onClick={() => startGame("P2")}
+          className="flex w-full items-center justify-center rounded-2xl bg-blue-700 p-4 inner-shadow-2-blue-900 hover:bg-blue-400"
+        >
           <p className="text-h-s uppercase text-navy-700">
             New game (vs player)
           </p>

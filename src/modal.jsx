@@ -17,7 +17,7 @@ export default ({ isOpen, children, className, onClose }) => {
 
   return (
     <dialog
-      className="backdrop:bg-black/50 h-64 w-screen max-w-[100vw] bg-navy-700"
+      className="h-64 w-screen max-w-[100vw] bg-navy-700 backdrop:bg-black/50"
       ref={ref}
     >
       <div className="flex h-full w-full items-center justify-center">
