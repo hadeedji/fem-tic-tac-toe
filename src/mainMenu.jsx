@@ -21,9 +21,9 @@ export default () => {
   };
 
   return (
-    <div className="m-6 flex w-full max-w-lg flex-col items-center space-y-10">
+    <div className="center m-6 w-full max-w-lg space-y-10">
       <img src={logo} alt="logo" />
-      <div className="flex w-full flex-col items-center justify-center rounded-2xl bg-navy-400 p-6 inner-shadow-2-navy-900">
+      <div className="center inner-shadow-2-navy w-full rounded-2xl bg-navy-400 p-6">
         <h2 className="mb-6 text-h-xs uppercase text-silver-700">
           Pick player 1's mark
         </h2>
@@ -57,13 +57,13 @@ export default () => {
       <div className="w-full space-y-5">
         <button
           onClick={() => startGame("CPU")}
-          className="flex w-full items-center justify-center rounded-2xl bg-yellow-700 p-4 inner-shadow-2-yellow-900 hover:bg-yellow-400"
+          className="center inner-shadow-2-yellow w-full rounded-2xl bg-yellow-700 p-4 hover:bg-yellow-400"
         >
           <p className="text-h-s uppercase text-navy-700">New game (vs cpu)</p>
         </button>
         <button
           onClick={() => startGame("P2")}
-          className="flex w-full items-center justify-center rounded-2xl bg-blue-700 p-4 inner-shadow-2-blue-900 hover:bg-blue-400"
+          className="center inner-shadow-2-blue w-full rounded-2xl bg-blue-700 p-4 hover:bg-blue-400"
         >
           <p className="text-h-s uppercase text-navy-700">
             New game (vs player)

@@ -103,13 +103,13 @@ export default ({ players }) => {
   const boxBackground = (index) => {
     if (winner && winningCombo.includes(index)) {
       if (winner == "X") {
-        return "bg-blue-400 inner-shadow-2-blue-900";
+        return "bg-blue-400 inner-shadow-2-blue";
       } else {
-        return "bg-yellow-400 inner-shadow-2-yellow-900";
+        return "bg-yellow-400 inner-shadow-2-yellow";
       }
     }
 
-    return "bg-navy-400 inner-shadow-2-navy-900";
+    return "bg-navy-400 inner-shadow-2-navy";
   };
 
   return (
@@ -119,7 +119,7 @@ export default ({ players }) => {
           <div className="flex-1">
             <img src={logo} alt="logo" />
           </div>
-          <div className="h-14 w-36 rounded-xl bg-navy-400 px-8 py-4 inner-shadow-1-navy-900">
+          <div className="inner-shadow-1-navy h-14 w-36 rounded-xl bg-navy-400 px-8 py-4">
             <div className="flex items-center justify-between text-silver-700">
               <TurnIndicator className="size-5" />
               <p className="text-h-xs uppercase">Turn</p>
@@ -128,7 +128,7 @@ export default ({ players }) => {
           <div className="flex-1">
             <button
               onClick={() => setRestartModal(true)}
-              className="ml-auto flex size-14 items-center justify-center rounded-xl bg-silver-700 inner-shadow-1-silver-900 hover:bg-silver-400"
+              className="center inner-shadow-1-silver ml-auto size-14 rounded-xl bg-silver-700 hover:bg-silver-400"
             >
               <img src={restart} alt="restart" />
             </button>
@@ -140,7 +140,7 @@ export default ({ players }) => {
             <button
               key={index}
               disabled={symbol != "" || winner || cpuTurn}
-              className={`group flex size-36 items-center justify-center rounded-2xl ${boxBackground(index)}`}
+              className={`center group size-36 rounded-2xl ${boxBackground(index)}`}
               onClick={() => {
                 updateGrid((grid) => {
                   grid[index] = turn;
@@ -152,16 +152,16 @@ export default ({ players }) => {
           ))}
         </main>
 
-        <footer className="flex items-center justify-between text-navy-700">
-          <div className="flex h-20 w-36 flex-col items-center justify-center rounded-2xl bg-blue-700">
+        <footer className="center flex-row justify-between text-navy-700">
+          <div className="center h-20 w-36 rounded-2xl bg-blue-700">
             <p className="text-base uppercase">X ({players.X})</p>
             <p className="text-h-m uppercase">{score.X}</p>
           </div>
-          <div className="flex h-20 w-36 flex-col items-center justify-center rounded-2xl bg-silver-700">
+          <div className="center h-20 w-36 rounded-2xl bg-silver-700">
             <p className="text-base uppercase">Ties</p>
             <p className="text-h-m uppercase">{score.ties}</p>
           </div>
-          <div className="flex h-20 w-36 flex-col items-center justify-center rounded-2xl bg-yellow-700">
+          <div className="center h-20 w-36 rounded-2xl bg-yellow-700">
             <p className="text-base uppercase">O ({players.O})</p>
             <p className="text-h-m uppercase">{score.O}</p>
           </div>
@@ -176,15 +176,15 @@ export default ({ players }) => {
       >
         <h2 className="text-h-l uppercase text-silver-700">Restart game?</h2>
         <form
-          className="flex items-center justify-around text-navy-700"
+          className="center flex-row justify-around text-navy-700"
           method="dialog"
         >
-          <button className="rounded-xl bg-silver-700 px-5 py-4 inner-shadow-1-silver-900 hover:bg-silver-400">
+          <button className="inner-shadow-1-silver rounded-xl bg-silver-700 px-5 py-4 hover:bg-silver-400">
             <p className="text-h-xs uppercase">No, cancel</p>
           </button>
           <button
             onClick={restartGame}
-            className="rounded-xl bg-yellow-700 px-5 py-4 inner-shadow-1-yellow-900 hover:bg-yellow-400"
+            className="inner-shadow-1-yellow rounded-xl bg-yellow-700 px-5 py-4 hover:bg-yellow-400"
           >
             <p className="text-h-xs uppercase">Yes, restart</p>
           </button>

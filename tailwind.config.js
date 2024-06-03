@@ -1,31 +1,29 @@
 import plugin from "tailwindcss/plugin";
 
 const innerShadowPlugin = plugin(function ({ addUtilities, theme, e }) {
-  const colors = Object.keys(theme("colors"))
-    .filter((key) => key.endsWith("-900"))
-    .reduce((obj, key) => {
-      obj[key] = theme("colors")[key];
-      return obj;
-    }, {});
-
   const spacing = {
     1: "0.25rem",
     2: "0.5rem",
   };
 
-  const utilities = Object.keys(colors).flatMap((colorKey) => {
+  const utilities = {};
+
+  const colors = theme("colors");
+  for (const colorKey in colors) {
+    if (typeof colors[colorKey] != "object") {
+      continue;
+    }
+
     const colorValue = colors[colorKey];
+    const color = colorValue["900"];
 
-    return Object.keys(spacing).map((spacingKey) => {
+    for (const spacingKey in spacing) {
       const spacingValue = spacing[spacingKey];
-
-      return {
-        [`.${e(`inner-shadow-${spacingKey}-${colorKey}`)}`]: {
-          "box-shadow": `inset 0 -${spacingValue} ${colorValue}`,
-        },
+      utilities[`.${e(`inner-shadow-${spacingKey}-${colorKey}`)}`] = {
+        "box-shadow": `inset 0 -${spacingValue} ${color}`,
       };
-    });
-  });
+    }
+  }
 
   addUtilities(utilities);
 });
@@ -34,19 +32,27 @@ export default {
   content: ["./index.html", "./src/**/*.jsx"],
   theme: {
     colors: {
-      "navy-900": "#10212A",
-      "navy-700": "#1A2A33",
-      "navy-400": "#1F3641",
-      "silver-900": "#6B8997",
-      "silver-700": "#A8BFC9",
-      "silver-400": "#DBE8ED",
-      "blue-900": "#118C87",
-      "blue-700": "#31C3BD",
-      "blue-400": "#65E9E4",
-      "yellow-900": "#CC8B13",
-      "yellow-700": "#F2B137",
-      "yellow-400": "#FFC860",
       black: "#000",
+      navy: {
+        400: "#1F3641",
+        700: "#1A2A33",
+        900: "#10212A",
+      },
+      silver: {
+        400: "#DBE8ED",
+        700: "#A8BFC9",
+        900: "#6B8997",
+      },
+      blue: {
+        400: "#65E9E4",
+        700: "#31C3BD",
+        900: "#118C87",
+      },
+      yellow: {
+        400: "#FFC860",
+        700: "#F2B137",
+        900: "#CC8B13",
+      },
     },
     fontFamily: {
       sans: ["Outfit", "sans-serif"],

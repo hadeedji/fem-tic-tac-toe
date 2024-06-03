@@ -8,7 +8,7 @@ export default () => {
   const players = useStore((state) => state.players);
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-navy-700">
+    <main className="center min-h-screen bg-navy-700">
       {isGameRunning ? <Game players={players} key={gameKey} /> : <MainMenu />}
     </main>
   );
