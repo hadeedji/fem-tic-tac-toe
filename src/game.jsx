@@ -8,7 +8,7 @@ import OvalOutline from "../assets/icon-o-outline.svg?react";
 import logo from "../assets/logo.svg";
 import restart from "../assets/icon-restart.svg";
 
-import { restartGame } from "./store";
+import { restartGame, setIsGameRunning } from "./store";
 import Modal from "./modal";
 
 const getWinningCombo = (grid) => {
@@ -46,28 +46,16 @@ export default ({ players }) => {
   const winningCombo = getWinningCombo(grid);
   const winner = winningCombo.length > 0 ? grid[winningCombo[0]] : null;
 
+  const gridFull = !grid.some((s) => s == "");
+  const roundOver = winner || gridFull;
+  const tie = roundOver && !winner;
+
   const cpuTurn = players[turn] == "CPU";
 
   useEffect(() => {
-    if (winner) {
+    if (roundOver) {
       const timeoutId = setTimeout(() => {
-        updateScore((score) => {
-          score[winner]++;
-        });
-
-        updateGrid(() => Array(9).fill(""));
-      }, 1000);
-
-      return () => clearTimeout(timeoutId);
-    }
-
-    if (!grid.some((s) => s == "")) {
-      const timeoutId = setTimeout(() => {
-        updateScore((score) => {
-          score.ties++;
-        });
-
-        updateGrid(() => Array(9).fill(""));
+        setRoundModal(true);
       }, 1000);
 
       return () => clearTimeout(timeoutId);
@@ -88,6 +76,18 @@ export default ({ players }) => {
       return () => clearTimeout(timeoutId);
     }
   }, [grid]);
+
+  const nextRound = () => {
+    updateScore((score) => {
+      if (winner) {
+        score[winner]++;
+      } else {
+        score.ties++;
+      }
+    });
+
+    updateGrid(() => Array(9).fill(""));
+  };
 
   const renderSymbol = (symbol, index) => {
     if (symbol == "") {
@@ -180,13 +180,11 @@ export default ({ players }) => {
       <Modal
         isOpen={restartModal}
         className="space-y-8"
-        onClose={() => {
-          setRestartModal(false);
-        }}
+        onClose={() => setRestartModal(false)}
       >
         <h2 className="text-h-l uppercase text-silver-700">Restart game?</h2>
         <form
-          className="center flex-row justify-around text-navy-700"
+          className="center flex-row space-x-4 text-navy-700"
           method="dialog"
         >
           <button className="rounded-xl bg-silver-700 px-5 py-4 inner-shadow-1-silver hover:bg-silver-400">
@@ -197,6 +195,29 @@ export default ({ players }) => {
             className="rounded-xl bg-yellow-700 px-5 py-4 inner-shadow-1-yellow hover:bg-yellow-400"
           >
             <p className="text-h-xs uppercase">Yes, restart</p>
+          </button>
+        </form>
+      </Modal>
+      <Modal
+        isOpen={roundModal}
+        className="space-y-8"
+        onClose={() => setRoundModal(false)}
+      >
+        <form
+          className="center flex-row space-x-4 text-navy-700"
+          method="dialog"
+        >
+          <button
+            onClick={() => setIsGameRunning(false)}
+            className="rounded-xl bg-silver-700 px-5 py-4 inner-shadow-1-silver hover:bg-silver-400"
+          >
+            <p className="text-h-xs uppercase">Quit</p>
+          </button>
+          <button
+            onClick={nextRound}
+            className="rounded-xl bg-yellow-700 px-5 py-4 inner-shadow-1-yellow hover:bg-yellow-400"
+          >
+            <p className="text-h-xs uppercase">Next round</p>
           </button>
         </form>
       </Modal>
