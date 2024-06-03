@@ -32,6 +32,40 @@ const getWinningCombo = (grid) => {
   return combos.find(wins) || [];
 };
 
+const GridButton = ({ onClick, symbol, turn, disabled, won }) => {
+  const Symbol = symbol == "X" ? Cross : Oval;
+  let symbolColor = symbol == "X" ? "text-blue-700" : "text-yellow-700";
+
+  const SymbolOutline = turn == "X" ? CrossOutline : OvalOutline;
+  let outlineColor = turn == "X" ? "text-blue-700" : "text-yellow-700";
+
+  let background = "bg-navy-400 inner-shadow-2-navy";
+
+  if (won) {
+    symbolColor = "text-navy-400";
+    background =
+      symbol == "X"
+        ? "bg-blue-400 inner-shadow-2-blue"
+        : "bg-yellow-400 inner-shadow-2-yellow";
+  }
+
+  return (
+    <button
+      onClick={onClick}
+      className={`center group size-36 rounded-2xl ${background}`}
+      disabled={symbol != "" || disabled}
+    >
+      {symbol == "" ? (
+        <SymbolOutline
+          className={`hidden size-16 group-enabled:group-hover:block ${outlineColor}`}
+        />
+      ) : (
+        <Symbol className={`size-16 ${symbolColor}`} />
+      )}
+    </button>
+  );
+};
+
 export default ({ players }) => {
   const [score, updateScore] = useImmer({ X: 0, O: 0, ties: 0 });
   const [grid, updateGrid] = useImmer(Array(9).fill(""));
@@ -40,7 +74,7 @@ export default ({ players }) => {
   const [roundModal, setRoundModal] = useState(false);
 
   const turn = grid.filter((s) => s == "").length % 2 != 0 ? "X" : "O";
-  const TurnOutline = turn == "X" ? CrossOutline : OvalOutline;
+  const cpuTurn = players[turn] == "CPU";
   const TurnIndicator = turn == "X" ? Cross : Oval;
 
   const winningCombo = getWinningCombo(grid);
@@ -48,9 +82,6 @@ export default ({ players }) => {
 
   const gridFull = !grid.some((s) => s == "");
   const roundOver = winner || gridFull;
-  const tie = roundOver && !winner;
-
-  const cpuTurn = players[turn] == "CPU";
 
   useEffect(() => {
     if (roundOver) {
@@ -89,39 +120,6 @@ export default ({ players }) => {
     updateGrid(() => Array(9).fill(""));
   };
 
-  const renderSymbol = (symbol, index) => {
-    if (symbol == "") {
-      const colorClass = turn == "X" ? "text-blue-700" : "text-yellow-700";
-
-      return (
-        <TurnOutline
-          className={`hidden size-16 group-enabled:group-hover:block ${colorClass}`}
-        />
-      );
-    }
-
-    const Symbol = symbol == "X" ? Cross : Oval;
-    let colorClass = symbol == "X" ? "text-blue-700" : "text-yellow-700";
-
-    if (winner && winningCombo.includes(index)) {
-      colorClass = "text-navy-400";
-    }
-
-    return <Symbol className={`size-16 ${colorClass}`} />;
-  };
-
-  const boxBackground = (index) => {
-    if (winner && winningCombo.includes(index)) {
-      if (winner == "X") {
-        return "bg-blue-400 inner-shadow-2-blue";
-      } else {
-        return "bg-yellow-400 inner-shadow-2-yellow";
-      }
-    }
-
-    return "bg-navy-400 inner-shadow-2-navy";
-  };
-
   return (
     <>
       <div className="flex flex-col space-y-4">
@@ -147,18 +145,17 @@ export default ({ players }) => {
 
         <main className="grid grid-cols-3 grid-rows-3 gap-5">
           {grid.map((symbol, index) => (
-            <button
-              key={index}
-              disabled={symbol != "" || winner || cpuTurn}
-              className={`center group size-36 rounded-2xl ${boxBackground(index)}`}
-              onClick={() => {
+            <GridButton
+              symbol={symbol}
+              disabled={cpuTurn || winner}
+              won={winner && winningCombo.includes(index)}
+              turn={turn}
+              onClick={() =>
                 updateGrid((grid) => {
                   grid[index] = turn;
-                });
-              }}
-            >
-              {renderSymbol(symbol, index)}
-            </button>
+                })
+              }
+            />
           ))}
         </main>
 
