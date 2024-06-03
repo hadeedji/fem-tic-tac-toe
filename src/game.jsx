@@ -1,5 +1,5 @@
 import { useImmer } from "use-immer";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Cross from "../assets/icon-x.svg?react";
 import CrossOutline from "../assets/icon-x-outline.svg?react";
@@ -11,7 +11,7 @@ import restart from "../assets/icon-restart.svg";
 import { restartGame } from "./store";
 import Modal from "./modal";
 
-const getWinner = (grid) => {
+const getWinningCombo = (grid) => {
   const combos = [
     [0, 1, 2],
     [3, 4, 5],
@@ -29,49 +29,87 @@ const getWinner = (grid) => {
     return symbols.every((symbol) => symbol == symbols[0] && symbol != "");
   };
 
-  const winningCombo = combos.find(wins);
-
-  if (winningCombo) {
-    return grid[winningCombo[0]];
-  }
-
-  return "";
+  return combos.find(wins) || [];
 };
 
-export default ({ players: _players }) => {
+export default ({ players }) => {
   const [score, updateScore] = useImmer({ X: 0, O: 0, ties: 0 });
-
   const [grid, updateGrid] = useImmer(Array(9).fill(""));
-  const [modal, setModal] = useState(false);
+
+  const [restartModal, setRestartModal] = useState(false);
+  const [roundModal, setRoundModal] = useState(false);
 
   const turn = grid.filter((s) => s == "").length % 2 != 0 ? "X" : "O";
   const TurnOutline = turn == "X" ? CrossOutline : OvalOutline;
   const TurnIndicator = turn == "X" ? Cross : Oval;
 
-  const winner = getWinner(grid);
-  if (winner) {
-    updateScore((score) => {
-      score[winner]++;
-    });
+  const winningCombo = getWinningCombo(grid);
+  const winner = winningCombo.length > 0 ? grid[winningCombo[0]] : null;
 
-    updateGrid(() => Array(9).fill(""));
-  }
+  const cpuTurn = players[turn] == "CPU";
 
-  const renderSymbol = (symbol) => {
+  useEffect(() => {
+    if (winner) {
+      const timeoutId = setTimeout(() => {
+        updateScore((score) => {
+          score[winner]++;
+        });
+
+        updateGrid(() => Array(9).fill(""));
+      }, 1000);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [winner]);
+
+  useEffect(() => {
+    if (cpuTurn && !winner && grid.filter((s) => s == "").length > 0) {
+      const timeoutId = setTimeout(() => {
+        updateGrid((grid) => {
+          const free = Array.from({ length: 9 }, (_, i) => i).filter(
+            (i) => grid[i] == "",
+          );
+
+          const choice = free[Math.floor(Math.random() * free.length)];
+          grid[choice] = turn;
+        });
+      }, 750);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [cpuTurn]);
+
+  const renderSymbol = (symbol, index) => {
     if (symbol == "") {
-      let colorClass = turn == "X" ? "text-blue-700" : "text-yellow-700";
+      const colorClass = turn == "X" ? "text-blue-700" : "text-yellow-700";
 
       return (
         <TurnOutline
-          className={`hidden size-16 group-hover:block ${colorClass}`}
+          className={`hidden size-16 group-enabled:group-hover:block ${colorClass}`}
         />
       );
     }
 
-    let Symbol = symbol == "X" ? Cross : Oval;
+    const Symbol = symbol == "X" ? Cross : Oval;
     let colorClass = symbol == "X" ? "text-blue-700" : "text-yellow-700";
 
+    if (winner && winningCombo.includes(index)) {
+      colorClass = "text-navy-400";
+    }
+
     return <Symbol className={`size-16 ${colorClass}`} />;
+  };
+
+  const boxBackground = (index) => {
+    if (winner && winningCombo.includes(index)) {
+      if (winner == "X") {
+        return "bg-blue-400 inner-shadow-2-blue-900";
+      } else {
+        return "bg-yellow-400 inner-shadow-2-yellow-900";
+      }
+    }
+
+    return "bg-navy-400 inner-shadow-2-navy-900";
   };
 
   return (
@@ -89,7 +127,7 @@ export default ({ players: _players }) => {
           </div>
           <div className="flex-1">
             <button
-              onClick={() => setModal(true)}
+              onClick={() => setRestartModal(true)}
               className="ml-auto flex size-14 items-center justify-center rounded-xl bg-silver-700 inner-shadow-1-silver-900 hover:bg-silver-400"
             >
               <img src={restart} alt="restart" />
@@ -101,22 +139,22 @@ export default ({ players: _players }) => {
           {grid.map((symbol, index) => (
             <button
               key={index}
-              disabled={symbol != ""}
-              className="group flex size-36 items-center justify-center rounded-2xl bg-navy-400 inner-shadow-2-navy-900"
+              disabled={symbol != "" || winner || cpuTurn}
+              className={`group flex size-36 items-center justify-center rounded-2xl ${boxBackground(index)}`}
               onClick={() => {
                 updateGrid((grid) => {
                   grid[index] = turn;
                 });
               }}
             >
-              {renderSymbol(symbol)}
+              {renderSymbol(symbol, index)}
             </button>
           ))}
         </main>
 
         <footer className="flex items-center justify-between text-navy-700">
           <div className="flex h-20 w-36 flex-col items-center justify-center rounded-2xl bg-blue-700">
-            <p className="text-base uppercase">X ({_players.X})</p>
+            <p className="text-base uppercase">X ({players.X})</p>
             <p className="text-h-m uppercase">{score.X}</p>
           </div>
           <div className="flex h-20 w-36 flex-col items-center justify-center rounded-2xl bg-silver-700">
@@ -124,16 +162,16 @@ export default ({ players: _players }) => {
             <p className="text-h-m uppercase">{score.ties}</p>
           </div>
           <div className="flex h-20 w-36 flex-col items-center justify-center rounded-2xl bg-yellow-700">
-            <p className="text-base uppercase">O ({_players.O})</p>
+            <p className="text-base uppercase">O ({players.O})</p>
             <p className="text-h-m uppercase">{score.O}</p>
           </div>
         </footer>
       </div>
       <Modal
-        isOpen={modal}
+        isOpen={restartModal}
         className="space-y-8"
         onClose={() => {
-          setModal(false);
+          setRestartModal(false);
         }}
       >
         <h2 className="text-h-l uppercase text-silver-700">Restart game?</h2>
