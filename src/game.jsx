@@ -60,10 +60,20 @@ export default ({ players }) => {
 
       return () => clearTimeout(timeoutId);
     }
-  }, [winner]);
 
-  useEffect(() => {
-    if (cpuTurn && !winner && grid.filter((s) => s == "").length > 0) {
+    if (!grid.some((s) => s == "")) {
+      const timeoutId = setTimeout(() => {
+        updateScore((score) => {
+          score.ties++;
+        });
+
+        updateGrid(() => Array(9).fill(""));
+      }, 1000);
+
+      return () => clearTimeout(timeoutId);
+    }
+
+    if (cpuTurn) {
       const timeoutId = setTimeout(() => {
         updateGrid((grid) => {
           const free = Array.from({ length: 9 }, (_, i) => i).filter(
@@ -77,7 +87,7 @@ export default ({ players }) => {
 
       return () => clearTimeout(timeoutId);
     }
-  }, [cpuTurn]);
+  }, [grid]);
 
   const renderSymbol = (symbol, index) => {
     if (symbol == "") {
@@ -119,7 +129,7 @@ export default ({ players }) => {
           <div className="flex-1">
             <img src={logo} alt="logo" />
           </div>
-          <div className="inner-shadow-1-navy h-14 w-36 rounded-xl bg-navy-400 px-8 py-4">
+          <div className="h-14 w-36 rounded-xl bg-navy-400 px-8 py-4 inner-shadow-1-navy">
             <div className="flex items-center justify-between text-silver-700">
               <TurnIndicator className="size-5" />
               <p className="text-h-xs uppercase">Turn</p>
@@ -128,7 +138,7 @@ export default ({ players }) => {
           <div className="flex-1">
             <button
               onClick={() => setRestartModal(true)}
-              className="center inner-shadow-1-silver ml-auto size-14 rounded-xl bg-silver-700 hover:bg-silver-400"
+              className="center ml-auto size-14 rounded-xl bg-silver-700 inner-shadow-1-silver hover:bg-silver-400"
             >
               <img src={restart} alt="restart" />
             </button>
@@ -179,12 +189,12 @@ export default ({ players }) => {
           className="center flex-row justify-around text-navy-700"
           method="dialog"
         >
-          <button className="inner-shadow-1-silver rounded-xl bg-silver-700 px-5 py-4 hover:bg-silver-400">
+          <button className="rounded-xl bg-silver-700 px-5 py-4 inner-shadow-1-silver hover:bg-silver-400">
             <p className="text-h-xs uppercase">No, cancel</p>
           </button>
           <button
             onClick={restartGame}
-            className="inner-shadow-1-yellow rounded-xl bg-yellow-700 px-5 py-4 hover:bg-yellow-400"
+            className="rounded-xl bg-yellow-700 px-5 py-4 inner-shadow-1-yellow hover:bg-yellow-400"
           >
             <p className="text-h-xs uppercase">Yes, restart</p>
           </button>
