@@ -8,7 +8,7 @@ export default () => {
   const players = useStore((state) => state.players);
 
   return (
-    <main className="center min-h-screen bg-navy-700 p-6">
+    <main className="center min-h-svh bg-navy-700 p-6">
       {isGameRunning ? <Game players={players} key={gameKey} /> : <MainMenu />}
     </main>
   );
