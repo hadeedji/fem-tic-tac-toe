@@ -57,7 +57,7 @@ const GridButton = ({ onClick, symbol, turn, disabled, won }) => {
     >
       {symbol == "" ? (
         <SymbolOutline
-          className={`hidden size-10 group-enabled:group-hover:block sm:size-16 ${outlineColor}`}
+          className={`hidden size-16 sm:group-enabled:group-hover:block ${outlineColor}`}
         />
       ) : (
         <Symbol className={`size-10 sm:size-16 ${symbolColor}`} />
