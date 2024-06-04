@@ -67,8 +67,26 @@ const GridButton = ({ onClick, symbol, turn, disabled, won }) => {
 };
 
 export default ({ players }) => {
-  const [score, updateScore] = useImmer({ X: 0, O: 0, ties: 0 });
+  const initialScore = {
+    X: {
+      value: 0,
+      display: `X (${players.X})`,
+      bg: "bg-blue-700",
+    },
+    ties: {
+      value: 0,
+      display: "ties",
+      bg: "bg-silver-700",
+    },
+    O: {
+      value: 0,
+      display: `O (${players.O})`,
+      bg: "bg-yellow-700",
+    },
+  };
+
   const [grid, updateGrid] = useImmer(Array(9).fill(""));
+  const [score, updateScore] = useImmer(initialScore);
 
   const [restartModal, setRestartModal] = useState(false);
   const [roundModal, setRoundModal] = useState(false);
@@ -111,9 +129,9 @@ export default ({ players }) => {
   const nextRound = () => {
     updateScore((score) => {
       if (winner) {
-        score[winner]++;
+        score[winner].value++;
       } else {
-        score.ties++;
+        score.ties.value++;
       }
     });
 
@@ -160,18 +178,12 @@ export default ({ players }) => {
         </main>
 
         <footer className="center flex-row justify-between text-navy-700">
-          <div className="center h-20 w-36 rounded-2xl bg-blue-700">
-            <p className="text-base uppercase">X ({players.X})</p>
-            <p className="text-h-m uppercase">{score.X}</p>
-          </div>
-          <div className="center h-20 w-36 rounded-2xl bg-silver-700">
-            <p className="text-base uppercase">Ties</p>
-            <p className="text-h-m uppercase">{score.ties}</p>
-          </div>
-          <div className="center h-20 w-36 rounded-2xl bg-yellow-700">
-            <p className="text-base uppercase">O ({players.O})</p>
-            <p className="text-h-m uppercase">{score.O}</p>
-          </div>
+          {Object.values(score).map((value) => (
+            <div className={`center h-20 w-36 rounded-2xl ${value.bg}`}>
+              <p className="text-base uppercase">{value.display}</p>
+              <p className="text-h-m uppercase">{value.value}</p>
+            </div>
+          ))}
         </footer>
       </div>
       <Modal
