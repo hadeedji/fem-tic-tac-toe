@@ -86,7 +86,7 @@ export default ({ players }) => {
   };
 
   const [grid, updateGrid] = useImmer(Array(9).fill(""));
-  const [score, updateScore] = useImmer(initialScore);
+  const [scores, updateScores] = useImmer(initialScore);
 
   const [restartModal, setRestartModal] = useState(false);
   const [roundModal, setRoundModal] = useState(false);
@@ -99,7 +99,8 @@ export default ({ players }) => {
   const winner = winningCombo.length > 0 ? grid[winningCombo[0]] : null;
 
   const gridFull = !grid.some((s) => s == "");
-  const roundOver = winner || gridFull;
+  const roundOver = gridFull || winner;
+  const tied = gridFull && !winner;
 
   useEffect(() => {
     if (roundOver) {
@@ -127,7 +128,7 @@ export default ({ players }) => {
   }, [grid]);
 
   const nextRound = () => {
-    updateScore((score) => {
+    updateScores((score) => {
       if (winner) {
         score[winner].value++;
       } else {
@@ -178,10 +179,10 @@ export default ({ players }) => {
         </main>
 
         <footer className="center flex-row justify-between text-navy-700">
-          {Object.values(score).map((value) => (
-            <div className={`center h-20 w-36 rounded-2xl ${value.bg}`}>
-              <p className="text-base uppercase">{value.display}</p>
-              <p className="text-h-m uppercase">{value.value}</p>
+          {Object.values(scores).map((score) => (
+            <div className={`center h-20 w-36 rounded-2xl ${score.bg}`}>
+              <p className="text-base uppercase">{score.display}</p>
+              <p className="text-h-m uppercase">{score.value}</p>
             </div>
           ))}
         </footer>
@@ -208,12 +209,37 @@ export default ({ players }) => {
         </form>
       </Modal>
       <Modal
+        className="center"
         isOpen={roundModal}
-        className="space-y-8"
         onClose={() => setRoundModal(false)}
       >
+        {(() => {
+          if (tied) {
+            return (
+              <h2 className="text-h-l uppercase text-silver-700">Round tied</h2>
+            );
+          }
+
+          const HeadingSymbol = winner == "X" ? Cross : Oval;
+          const headingColor =
+            winner == "X" ? "text-blue-700" : "text-yellow-700";
+
+          return (
+            <>
+              <p className="text-h-xs text-silver-700">
+                {players[winner]} wins!
+              </p>
+              <div
+                className={`mt-4 flex items-center space-x-6 ${headingColor}`}
+              >
+                <HeadingSymbol className="size-16" />
+                <h2 className="text-h-l uppercase">Takes the round</h2>
+              </div>
+            </>
+          );
+        })()}
         <form
-          className="center flex-row space-x-4 text-navy-700"
+          className="center mt-6 flex-row space-x-4 text-navy-700"
           method="dialog"
         >
           <button
