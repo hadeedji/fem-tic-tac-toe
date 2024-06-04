@@ -52,15 +52,15 @@ const GridButton = ({ onClick, symbol, turn, disabled, won }) => {
   return (
     <button
       onClick={onClick}
-      className={`center group size-36 rounded-2xl ${background}`}
+      className={`center group size-24 rounded-2xl sm:size-36 ${background}`}
       disabled={symbol != "" || disabled}
     >
       {symbol == "" ? (
         <SymbolOutline
-          className={`hidden size-16 group-enabled:group-hover:block ${outlineColor}`}
+          className={`hidden size-10 group-enabled:group-hover:block sm:size-16 ${outlineColor}`}
         />
       ) : (
-        <Symbol className={`size-16 ${symbolColor}`} />
+        <Symbol className={`size-10 sm:size-16 ${symbolColor}`} />
       )}
     </button>
   );
@@ -146,10 +146,10 @@ export default ({ players }) => {
           <div className="flex-1">
             <img src={logo} alt="logo" />
           </div>
-          <div className="h-14 w-36 rounded-xl bg-navy-400 px-8 py-4 inner-shadow-1-navy">
-            <div className="flex items-center justify-between text-silver-700">
-              <TurnIndicator className="size-5" />
-              <p className="text-h-xs uppercase">Turn</p>
+          <div className="center h-14 w-24 flex-row rounded-xl bg-navy-400 px-4 py-2 inner-shadow-1-navy sm:w-36 sm:px-8 sm:py-4">
+            <div className="flex w-full items-center justify-between text-silver-700">
+              <TurnIndicator className="size-4 sm:size-5" />
+              <p className="text-base uppercase sm:text-h-xs">Turn</p>
             </div>
           </div>
           <div className="flex-1">
@@ -180,7 +180,9 @@ export default ({ players }) => {
 
         <footer className="center flex-row justify-between text-navy-700">
           {Object.values(scores).map((score) => (
-            <div className={`center h-20 w-36 rounded-2xl ${score.bg}`}>
+            <div
+              className={`center h-16 w-24 rounded-2xl sm:h-20 sm:w-36 ${score.bg}`}
+            >
               <p className="text-base uppercase">{score.display}</p>
               <p className="text-h-m uppercase">{score.value}</p>
             </div>
@@ -192,7 +194,9 @@ export default ({ players }) => {
         className="space-y-8"
         onClose={() => setRestartModal(false)}
       >
-        <h2 className="text-h-l uppercase text-silver-700">Restart game?</h2>
+        <h2 className="text-center text-h-m uppercase text-silver-700 sm:text-h-l">
+          Restart game?
+        </h2>
         <form
           className="center flex-row space-x-4 text-navy-700"
           method="dialog"
@@ -216,7 +220,9 @@ export default ({ players }) => {
         {(() => {
           if (tied) {
             return (
-              <h2 className="text-h-l uppercase text-silver-700">Round tied</h2>
+              <h2 className="text-center text-h-m uppercase text-silver-700 sm:text-h-l">
+                Round tied
+              </h2>
             );
           }
 
@@ -226,14 +232,16 @@ export default ({ players }) => {
 
           return (
             <>
-              <p className="text-h-xs text-silver-700">
+              <p className="text-center text-base text-silver-700 sm:text-h-xs">
                 {players[winner]} wins!
               </p>
               <div
-                className={`mt-4 flex items-center space-x-6 ${headingColor}`}
+                className={`mt-4 flex items-center space-x-2 sm:space-x-6 ${headingColor}`}
               >
-                <HeadingSymbol className="size-16" />
-                <h2 className="text-h-l uppercase">Takes the round</h2>
+                <HeadingSymbol className="sm:size-18 size-[28px]" />
+                <h2 className="text-center text-h-m uppercase sm:text-h-l">
+                  Takes the round
+                </h2>
               </div>
             </>
           );
